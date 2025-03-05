@@ -1,7 +1,9 @@
-FROM ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX_SLASH}openjdk:11-slim
+FROM ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX_SLASH}nginx:stable-alpine
 
-WORKDIR /codeland
+# setup NGINX
+COPY deployment/nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
-COPY build/libs/devinecodemy-0.0.1-SNAPSHOT.jar /codeland/app.jar
+ADD dist /usr/share/nginx/html
 
-ENTRYPOINT ["java", "-Dspring.profiles.active=dev", "-jar", "app.jar"]
+# start NGINX
+CMD ["nginx", "-g", "daemon off;"]
